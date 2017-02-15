@@ -20,8 +20,8 @@ function instagramFeed(){
         },
         apiCall: function(){
 
-            var apiUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=',
-                apiToken = '5129060.14ba9b1.a0fcb87320534f7fa8e2a6f9e4009483',
+            var apiUrl = 'https://api.instagram.com/v1/tags/mbf2017/media/recent?access_token=',
+                apiToken = '', // api token here.
                 apiAjaxUrl = apiUrl + apiToken;
 
             $.ajax({
@@ -31,10 +31,11 @@ function instagramFeed(){
                 dataType: 'jsonp'
             }).done(function(response){
                 var instagramResponse = response.data;
-
+                console.log(response.data);
                 if(instagramResponse){
                     var media = model.data.media;
                     instagramResponse.forEach(function(el) {
+                        console.log(el);
                         media.push(el);
                     });
                     control.makeThumbnails();
@@ -56,7 +57,7 @@ function instagramFeed(){
             var media = model.data.media,
                 thumbnails = model.data.thumbnails;
 
-            if(media.length > 10){
+            if(media.length >= 10){
                 media.forEach(function(el) {
                     thumbnails.push( new control.ThumbnailConstructor(el.images.thumbnail.url,el.likes.count,el.link));
                 });
@@ -71,7 +72,7 @@ function instagramFeed(){
         showFeed: function(){
             var feed = $('#instagram-feed'),
                 dataThumbnails = model.data.thumbnails,
-                feedLimit = 6,
+                feedLimit = 10,
                 listItem = '',
                 feedTemplate = '<li><a href="%url%" target="_blank"><img src="%image%">' +
                 '<span class="instagram-meta">%count%</span></a></li>';
