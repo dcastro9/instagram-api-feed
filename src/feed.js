@@ -20,7 +20,11 @@ function instagramFeed(){
         },
         apiCall: function(){
 
-            var apiUrl = 'https://api.instagram.com/v1/tags/mbf2017/media/recent?access_token=',
+
+            model.data.media = [];
+            model.data.thumbnails = [];
+
+            var apiUrl = 'https://api.instagram.com/v1/tags/2oceansbrewing/media/recent?access_token=',
                 apiToken = '', // api token here.
                 apiAjaxUrl = apiUrl + apiToken;
 
@@ -31,11 +35,9 @@ function instagramFeed(){
                 dataType: 'jsonp'
             }).done(function(response){
                 var instagramResponse = response.data;
-                console.log(response.data);
                 if(instagramResponse){
                     var media = model.data.media;
                     instagramResponse.forEach(function(el) {
-                        console.log(el);
                         media.push(el);
                     });
                     control.makeThumbnails();
@@ -74,19 +76,22 @@ function instagramFeed(){
                 dataThumbnails = model.data.thumbnails,
                 feedLimit = 10,
                 listItem = '',
-                feedTemplate = '<li><a href="%url%" target="_blank"><img src="%image%">' +
-                '<span class="instagram-meta">%count%</span></a></li>';
+                feedTemplate = '<li><img src="%image%"></li>';
+
+            $('#instagram-feed > li').remove();
 
             dataThumbnails.forEach(function(el,index) {
                 if (index < feedLimit){
+                    console.log(el);
                     listItem = feedTemplate.replace("%image%", el.image).replace("%count%",el.likes).replace("%url%",el.url);
                     feed.append(listItem);
                 }
             });
+            console.log('api call')
+            setTimeout(control.apiCall, 10000);
         },
         showError: function(){
-            var errorMessage = $('#instagram-error');
-            errorMessage.html('Oops. Something went wrong.');
+            console.log('Oops. Something went wrong.');
         }
     }
 
